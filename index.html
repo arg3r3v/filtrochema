@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Video con MindAR</title>
+    <title>Video AR con MindAR</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -16,39 +16,46 @@
     </style>
   </head>
   <body>
-    <a-scene mindar-image="imageTargetSrc: targets (13).mind; autoStart: true;" 
-             vr-mode-ui="enabled: false" 
-             device-orientation-permission-ui="enabled: true" 
-             embedded>
+    <a-scene 
+      mindar-image="imageTargetSrc: targets (13).mind; autoStart: true;" 
+      vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: true" 
+      embedded>
       
       <a-assets>
-        <video id="video1" src="videochema.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline></video>
+        <video id="video1" src="videochema.mp4" preload="auto" crossorigin="anonymous" playsinline webkit-playsinline></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
         <a-video 
+          id="videoPlane"
           src="#video1" 
           width="1.5" 
           height="0.85" 
           position="0 0 0" 
           rotation="0 0 0"
-          autoplay="true">
+          visible="false">
         </a-video>
       </a-entity>
     </a-scene>
 
     <script>
-      // Iniciar reproducción del video cuando se detecta el marcador
       document.addEventListener("DOMContentLoaded", () => {
         const sceneEl = document.querySelector("a-scene");
         const video = document.querySelector("#video1");
+        const videoPlane = document.querySelector("#videoPlane");
+
         sceneEl.addEventListener("targetFound", () => {
+          videoPlane.setAttribute("visible", "true");
+          video.currentTime = 0; // reinicia el video desde el inicio
           video.play();
         });
+
         sceneEl.addEventListener("targetLost", () => {
           video.pause();
+          videoPlane.setAttribute("visible", "false");
         });
       });
     </script>
