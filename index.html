@@ -4,35 +4,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+      }
+
+      a-scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
-    <a-scene 
-      mindar-image="imageTargetSrc: ./target(13).mind" 
-      color-space="sRGB" 
-      renderer="colorManagement: true, physicallyCorrectLights" 
-      vr-mode-ui="enabled: false" 
+    <a-scene
+      mindar-image="imageTargetSrc: ./target(13).mind"
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
       embedded
     >
       <a-assets>
-        <!-- Carga el video como textura -->
         <video 
           id="video" 
           src="./videochema.mp4" 
-          autoplay 
           loop 
-          preload="auto" 
           crossorigin="anonymous" 
           playsinline
+          preload="auto"
+          webkit-playsinline
         ></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!-- El target index 0 se refiere al primer marcador en el archivo .mind -->
-      <a-entity mindar-image-target="targetIndex: 0">
-        <!-- El video se proyecta sobre un plano -->
+      <a-entity mindar-image-target="targetIndex: 0" id="target">
         <a-video 
+          id="videoPlane"
           src="#video" 
           width="1" 
           height="0.5625" 
@@ -41,5 +56,19 @@
         ></a-video>
       </a-entity>
     </a-scene>
+
+    <script>
+      const sceneEl = document.querySelector('a-scene');
+      const videoEl = document.querySelector('#video');
+      const targetEl = document.querySelector('#target');
+
+      sceneEl.addEventListener("targetFound", () => {
+        videoEl.play();
+      });
+
+      sceneEl.addEventListener("targetLost", () => {
+        videoEl.pause();
+      });
+    </script>
   </body>
 </html>
