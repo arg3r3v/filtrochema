@@ -37,7 +37,7 @@
           src="./videochema.mp4" 
           loop 
           crossorigin="anonymous" 
-          playsinline
+          playsinline 
           preload="auto"
           webkit-playsinline
         ></video>
@@ -53,21 +53,23 @@
           height="0.5625" 
           position="0 0 0"
           rotation="0 0 0"
+          visible="false"
         ></a-video>
       </a-entity>
     </a-scene>
 
     <script>
-      const sceneEl = document.querySelector('a-scene');
-      const videoEl = document.querySelector('#video');
-      const targetEl = document.querySelector('#target');
+      const video = document.querySelector('#video');
+      const videoPlane = document.querySelector('#videoPlane');
 
-      sceneEl.addEventListener("targetFound", () => {
-        videoEl.play();
+      document.querySelector('a-scene').addEventListener('targetFound', () => {
+        videoPlane.setAttribute('visible', true);
+        video.play();
       });
 
-      sceneEl.addEventListener("targetLost", () => {
-        videoEl.pause();
+      document.querySelector('a-scene').addEventListener('targetLost', () => {
+        video.pause();
+        videoPlane.setAttribute('visible', false);
       });
     </script>
   </body>
